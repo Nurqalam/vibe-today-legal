@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Политика конфиденциальности — Твой вайб сегодня</title>
+  <style>
+    :root {
+      --ink: #1B2436;
+      --accent: #E8593A;
+      --muted: rgba(27, 36, 54, 0.55);
+      --paper: #FFFFFF;
+      --sky-bottom: #DCEAFF;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI',
+        Roboto, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(170deg, #FFFFFF 0%, #FFFFFF 35%,
+        var(--sky-bottom) 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 28px 80px;
+    }
+    .meta {
+      font-size: 11px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .meta .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .meta .line {
+      flex: 1;
+      height: 1px;
+      background: rgba(27, 36, 54, 0.3);
+    }
+    h1 {
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -1.6px;
+      line-height: 1;
+      margin: 0 0 12px;
+    }
+    h1 .accent { color: var(--accent); }
+    .lead {
+      font-size: 17px;
+      color: var(--muted);
+      margin: 0 0 40px;
+      max-width: 520px;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      margin: 36px 0 14px;
+    }
+    p, ul { font-size: 15px; margin: 0 0 14px; }
+    ul { padding-left: 22px; }
+    li { margin-bottom: 6px; }
+    .highlight {
+      background: #F4B431;
+      padding: 0 4px;
+    }
+    a { color: var(--ink); }
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px dashed rgba(27, 36, 54, 0.3);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    code {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
+        Consolas, monospace;
+      font-size: 0.9em;
+      background: rgba(27, 36, 54, 0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="meta">
+      <span>ПРИВАТНОСТЬ</span>
+      <span class="line"></span>
+      <span class="dot"></span>
+      <span>Vibe Today</span>
+    </div>
+
+    <h1>Политика<br/><span class="accent">конфиденциальности</span></h1>
+    <p class="lead">
+      Что мы знаем о тебе, что не знаем,
+      и что улетает наружу когда ты пользуешься приложением.
+    </p>
+
+    <h2>Кто мы</h2>
+    <p>
+      «Твой вайб сегодня» — мобильное приложение от <strong>Nurkalam Tolegen</strong>,
+      которое предлагает короткий шуточный квиз и выдаёт «карточку дня» с
+      персонажем-архетипом. Ниже — что приложение делает с данными, без воды.
+    </p>
+
+    <h2>Что хранится <span class="highlight">только на устройстве</span></h2>
+    <ul>
+      <li>Ответы текущего квиза и история твоих результатов (имя архетипа,
+        цитата, статы, дата).</li>
+      <li>Метка «прошёл сегодня» для блокировки повторного прохождения в
+        течение дня.</li>
+      <li>Кеш сгенерированных вопросов (обновляется раз в сутки).</li>
+    </ul>
+    <p>
+      Всё это лежит в стандартном хранилище приложения на телефоне
+      (<code>SharedPreferences</code> / <code>NSUserDefaults</code>) и
+      <strong>никуда не отправляется</strong>. Удалив приложение, ты удаляешь все
+      эти данные.
+    </p>
+
+    <h2>Что отправляется на сервер</h2>
+    <p>
+      Чтобы карточка дня была живой и не повторялась, приложение делает запросы
+      к нашему серверу на Cloudflare Workers, который вызывает
+      <strong>Google Gemini</strong>:
+    </p>
+    <ul>
+      <li><code>POST /personalize</code> — отправляет: id архетипа, его
+        название и эмодзи, базовые тексты, и 5 числовых параметров (axes:
+        энергия, социальность, фокус, хаос, общий вайб).
+        <strong>Без</strong> имени, email, ID устройства, IP в нашей логике.</li>
+      <li><code>GET /questions</code> — забирает свежий пул вопросов раз в
+        сутки. Никакой пользовательской информации не передаётся.</li>
+    </ul>
+    <p>
+      Cloudflare и Google как поставщики инфраструктуры могут логировать
+      технические метаданные (IP-адрес запроса, заголовки, временные метки) в
+      рамках своих сервисов. Мы не имеем к этим логам доступа в обычной работе
+      и не используем их для идентификации пользователей.
+    </p>
+
+    <h2>Сбор отчётов о сбоях</h2>
+    <p>
+      Если приложение падает, оно отправляет технический отчёт в
+      <strong>Sentry</strong>: версия ОС, версия app, стек ошибки, шаги
+      воспроизведения. <strong>Никакого</strong> содержимого твоих ответов или
+      результатов в отчётах нет. Это нужно только чтобы быстро находить и
+      чинить баги.
+    </p>
+
+    <h2>Чего мы НЕ собираем</h2>
+    <ul>
+      <li>Никаких аккаунтов, регистрации, паролей.</li>
+      <li>Никакой аналитики поведения (ни Firebase, ни AppMetrica, ничего).</li>
+      <li>Никакой рекламы и трекеров рекламных сетей.</li>
+      <li>Никакого доступа к камере, микрофону, контактам, местоположению.</li>
+    </ul>
+
+    <h2>Дети</h2>
+    <p>
+      Приложение не предназначено для детей младше 13 лет. Мы не собираем
+      никакой информации, идентифицирующей детей.
+    </p>
+
+    <h2>Твои права</h2>
+    <p>
+      Поскольку мы не привязываем данные к личности, нет учётной записи,
+      которую можно «удалить». Если хочешь стереть данные с устройства —
+      используй кнопку «Сбросить историю» в настройках приложения, или удали
+      приложение полностью.
+    </p>
+
+    <h2>Изменения</h2>
+    <p>
+      Мы можем обновлять эту политику. Последнее обновление —
+      <strong>5 мая 2026</strong>. Существенные изменения попадут в
+      следующее обновление приложения с пометкой в release notes.
+    </p>
+
+    <h2>Контакт</h2>
+    <p>
+      Вопросы или жалобы — пиши на
+      <a href="mailto:tnurkalam@gmail.com">tnurkalam@gmail.com</a>.
+      Стараемся отвечать в течение 7 рабочих дней.
+    </p>
+
+    <div class="footer">
+      © 2026 Nurkalam Tolegen · Документ написан простым человеческим
+      языком намеренно. Если что-то неясно — спрашивай.
+    </div>
+  </main>
+</body>
+</html>
